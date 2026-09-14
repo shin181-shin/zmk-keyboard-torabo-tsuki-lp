@@ -2,6 +2,14 @@
 #include <dt-bindings/zmk/bt.h>
 #include <dt-bindings/zmk/keys.h>
 #include <dt-bindings/zmk/pointing.h>
+#include <input/processors.dtsi> 
+
+&trackball_listener {
+    scroller {
+        layers = <4>; // レイヤー4の時に発動
+        input-processors = <&zip_xy_to_scroll_mapper>; // ボール移動をスクロールに変換
+    };
+};
 
 &lt {
     flavor = "balanced";
@@ -92,15 +100,3 @@
     };
 };
 
-/* トラックボールのスクロール切り替え（汎用リスナー定義） */
-
-/ {
-    input_listeners {
-        compatible = "zmk,input-listeners";
-
-        scroll_listener {
-            layers = <4>;
-            input-processors = <&zip_scroll_scaler 1 1>;
-        };
-    };
-};
