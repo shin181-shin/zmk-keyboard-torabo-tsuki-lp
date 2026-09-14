@@ -2,7 +2,8 @@
 #include <dt-bindings/zmk/bt.h>
 #include <dt-bindings/zmk/keys.h>
 #include <dt-bindings/zmk/pointing.h>
-#include <input/processors.dtsi>
+
+// 💡 複雑なinput-processors用のincludeやリスナー定義はすべて削除しました
 
 &lt {
     flavor = "balanced";
@@ -19,14 +20,6 @@
 };
 
 / {
-    // 👇️ 正しいノード名「input_split_listener」をルートノードの内側に配置
-    &input_split_listener {
-        scroller {
-            layers = <4>; // レイヤー4の時だけ有効化
-            input-processors = <&zip_xy_to_scroll_mapper>; // スクロールに変換
-        };
-    };
-
     combos {
         compatible = "zmk,combos";
 
@@ -99,4 +92,9 @@
             >;
         };
     };
+};
+
+// 👇️【最下部】torabo-tsuki LP 独自仕様のマウススクロール・レイヤー指定
+&trackball {
+    scroll-layers = <4>;
 };
