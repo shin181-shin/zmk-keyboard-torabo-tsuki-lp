@@ -4,19 +4,23 @@
 #include <dt-bindings/zmk/pointing.h>
 #include <input/processors.dtsi>
 
-/if-exists/ &trackball_central_listener {
+#if defined(trackball_central_listener)
+&trackball_central_listener {
     scroller {
         layers = <4>;
         input-processors = <&zip_xy_to_scroll_mapper>;
     };
 };
+#endif
 
-/if-exists/ &trackball_peripheral_listener {
+#if defined(trackball_peripheral_listener)
+&trackball_peripheral_listener {
     scroller {
         layers = <4>;
         input-processors = <&zip_xy_to_scroll_mapper>;
     };
 };
+#endif
 
 &lt {
     flavor = "balanced";
