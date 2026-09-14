@@ -3,6 +3,20 @@
 #include <dt-bindings/zmk/keys.h>
 #include <dt-bindings/zmk/pointing.h>
 
+&lt {
+    flavor = "balanced";
+    bindings = <&mo>, <&kp>;
+
+    tapping-term-ms = <150>;
+};
+
+&mt {
+    bindings = <&kp>, <&kp>;
+
+    tapping-term-ms = <150>;
+    flavor = "balanced";
+};
+
 / {
     combos {
         compatible = "zmk,combos";
@@ -10,6 +24,16 @@
         f2 {
             bindings = <&kp F2>;
             key-positions = <28 27>;
+        };
+
+        leftclick {
+            bindings = <&mkp LCLK>;
+            key-positions = <33 34>;
+        };
+
+        rightclick {
+            bindings = <&mkp RCLK>;
+            key-positions = <34 35>;
         };
     };
 
@@ -20,7 +44,7 @@
             bindings = <
 &none             &none         &none         &none  &none      &none                                         &none               &none  &none      &none     &none                     &none
 &kp TAB           &kp Q         &kp W         &kp E  &kp R      &kp T                                         &kp Y               &kp U  &kp I      &kp O     &kp P                     &kp KP_MINUS
-&kp BACKSPACE     &kp A         &kp S         &kp D  &kp F      &kp G               &none        &none        &kp H               &kp J  &kp K      &kp L     &kp SEMI                  &kp ENTER
+&kp BACKSPACE     &kp A         &kp S         &kp D  &kp F      &kp G               &none        &none        &kp H               &kp J  &lt 4 K    &kp L     &kp SEMI                  &kp ENTER
 &kp LSHFT         &kp Z         &kp X         &kp C  &kp V      &kp B               &lt 3 LSHFT  &kp DEL      &kp N               &kp M  &kp COMMA  &kp DOT   &mt RIGHT_SHIFT UP_ARROW  &kp SLASH
 &kp LEFT_CONTROL  &kp LEFT_GUI  &kp LEFT_ALT  &none  &mkp LCLK  &lt 2 INT_MUHENKAN  &lt 1 SPACE  &lt 1 SPACE  &lt 2 INT_MUHENKAN  &none  &none      &kp LEFT  &mt RCTRL DOWN            &kp RIGHT
             >;
@@ -58,11 +82,11 @@
 
         layer_4 {
             bindings = <
-&trans  &trans  &trans  &trans  &trans  &trans                  &trans  &trans  &trans  &trans  &trans  &trans
-&trans  &trans  &trans  &trans  &trans  &trans                  &trans  &trans  &trans  &trans  &trans  &trans
-&trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
-&trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
-&trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
+&trans     &trans  &trans  &trans  &trans  &trans                  &trans  &trans  &trans  &trans  &trans  &trans
+&trans     &trans  &trans  &trans  &trans  &trans                  &trans  &trans  &trans  &trans  &trans  &trans
+&trans     &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
+&trans     &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
+&kp LCTRL  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
             >;
         };
     };
