@@ -96,7 +96,7 @@
 // 👇️【ここから最下部に追加】
 &trackball_peripheral_listener {
     scroller {
-        layers = <4>; // レイヤー4の時だけ有効化
-        input-processors = <&zip_xy_to_scroll_mapper>; // スクロールに変換
+        layers = <4>;
+        input-processors = <&zip_xy_to_scroll_mapper>;
     };
 };
