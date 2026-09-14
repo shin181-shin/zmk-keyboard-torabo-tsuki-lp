@@ -91,16 +91,3 @@
         };
     };
 };
-
-/* トラックボールのスクロール切り替え（汎用リスナー定義） */
-
-/ {
-    input_listeners {
-        compatible = "zmk,input-listeners";
-
-        scroll_listener {
-            layers = <4>;
-            input-processors = <&zip_scroll_scaler 1 1>;
-        };
-    };
-};
