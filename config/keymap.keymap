@@ -3,7 +3,7 @@
 #include <dt-bindings/zmk/keys.h>
 #include <dt-bindings/zmk/pointing.h>
 
-// 👇️ ZMK標準のプロセッサ定義を読み込む（これが必要です！）
+// 👇️ 公式ガイドの指示通り、ZMK標準のプロセッサ定義を読み込みます
 #include <input/processors.dtsi>
 
 &lt {
@@ -95,7 +95,7 @@
     };
 };
 
-// 👇️【ここから最下部】新しくリスナーを作らず、既存のtrackballに対して直接プロセッサを登録
+// 👇️【最下部】新しくリスナーを作らず、既存の「&trackball」自体に直接プロセッサを注入します
 &trackball {
     input-processors = <&zip_xy_to_scroll_mapper>;
     scroll-layers = <4>;
