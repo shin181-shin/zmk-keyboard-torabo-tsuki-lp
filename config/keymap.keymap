@@ -6,13 +6,11 @@
 &lt {
     flavor = "balanced";
     bindings = <&mo>, <&kp>;
-
     tapping-term-ms = <150>;
 };
 
 &mt {
     bindings = <&kp>, <&kp>;
-
     tapping-term-ms = <150>;
     flavor = "balanced";
 };
@@ -88,9 +86,11 @@
 &trans     &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
 &kp LCTRL  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
             >;
-            
-            /* ★このレイヤーにいる間、トラックボールをスクロールにする魔法の追加設定★ */
-            input-processor = <&zip_xy_to_scroll_mapper>;
         };
     };
+};
+
+/* レイヤー4が有効な間、トラックボール入力をスクロール変換する設定 */
+&layer_4 {
+    input-processors = <&zip_xy_to_scroll_mapper>;
 };
