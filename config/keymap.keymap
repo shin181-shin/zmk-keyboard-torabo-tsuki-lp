@@ -4,7 +4,7 @@
 #include <dt-bindings/zmk/pointing.h>
 #include <input/processors.dtsi>
 
-&trackball_listener {
+&trackball_central_listener {
     scroller {
         layers = <4>;
         input-processors = <&zip_xy_to_scroll_mapper>;
