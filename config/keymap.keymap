@@ -4,10 +4,10 @@
 #include <dt-bindings/zmk/pointing.h>
 #include <input/processors.dtsi> 
 
-&trackball_listener {
+&input_listener {
     scroller {
-        layers = <4>; // レイヤー4の時に発動
-        input-processors = <&zip_xy_to_scroll_mapper>; // ボール移動をスクロールに変換
+        layers = <4>; // レイヤー4のときに発動
+        input-processors = <&zip_xy_to_scroll_mapper>; // スクロールに変換
     };
 };
 
