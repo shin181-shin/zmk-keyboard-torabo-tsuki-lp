@@ -3,7 +3,7 @@
 #include <dt-bindings/zmk/keys.h>
 #include <dt-bindings/zmk/pointing.h>
 
-// 👇️ インプットプロセッサ（ボールスクロール）の定義を読み込みます
+// 👇️ インプットプロセッサの定義を読み込みます
 #include <input/processors.dtsi>
 
 &lt {
@@ -91,12 +91,14 @@
 &trans     &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
 &kp LCTRL  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
             >;
-        }; // 👈️ ここにセミコロン「;」をしっかり補完しました！
+        };
     };
 };
 
-// 👇️ 公式ガイド通り、既存のtrackballに対して直接プロセッサを設定
+// 👇️【最下部】トラックボールノード（trackball）が存在する側のビルドの時だけ設定を適用する安全マクロ
+#if DT_NODE_EXISTS(DT_NODELABEL(trackball))
 &trackball {
     input-processors = <&zip_xy_to_scroll_mapper>;
     scroll-layers = <4>;
 };
+#endif
