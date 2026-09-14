@@ -91,10 +91,3 @@
         }
     };
 };
-
-// 💡 torabo-tsuki LP公式準拠：最もエラーが出ず安全にレイヤー連動させる記述
-#if IS_ENABLED(CONFIG_INPUT)
-&trackball {
-    scroll-layers = <4>;
-};
-#endif
