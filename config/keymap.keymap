@@ -97,7 +97,7 @@
 
 // 👇️【最下部】入力デバイス（トラックボール等）のビルドオプションが有効な時だけ適用する安全な分岐
 #if IS_ENABLED(CONFIG_INPUT)
-&trackball {
+&trackball_peripheral {
     input-processors = <&zip_xy_to_scroll_mapper>;
     scroll-layers = <4>;
 };
