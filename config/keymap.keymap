@@ -35,6 +35,17 @@
         };
     };
 
+    /* レイヤー4でトラックボールをスクロールに変換する設定 */
+    trackball_scroll {
+        compatible = "zmk,input-behavior-listener";
+        device = <&trackball>;
+        layers = <4>;
+        evt-type = <INPUT_EV_REL>;
+        x-input-code = <INPUT_REL_HWHEEL>;
+        y-input-code = <INPUT_REL_WHEEL>;
+        y-invert;
+    };
+
     keymap {
         compatible = "zmk,keymap";
 
@@ -88,9 +99,4 @@
             >;
         };
     };
-};
-
-/* レイヤー4が有効な間、トラックボール入力をスクロール変換する設定 */
-&layer_4 {
-    input-processors = <&zip_xy_to_scroll_mapper>;
 };
