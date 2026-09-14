@@ -4,13 +4,6 @@
 #include <dt-bindings/zmk/pointing.h>
 #include <input/processors.dtsi>
 
-&input_listener {
-    scroller {
-        layers = <4>; // レイヤー4のときに発動
-        input-processors = <&zip_xy_to_scroll_mapper>; // スクロールに変換
-    };
-};
-
 &lt {
     flavor = "balanced";
     bindings = <&mo>, <&kp>;
@@ -97,10 +90,13 @@
 &kp LCTRL  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
             >;
         };
+    }; // 👈️ keymap ノードの閉じカッコ
+}; // 👈️ / (ルートノード) の閉じカッコ。ここまでは既存のまま
 
-&trackball {
-    input-processors = <&zip_xy_to_scroll_mapper>;
-};
+// 👇️【ここから最下部に追加】
+&trackball_peripheral_listener {
+    scroller {
+        layers = <4>; // レイヤー4の時だけ有効化
+        input-processors = <&zip_xy_to_scroll_mapper>; // スクロールに変換
     };
 };
-
