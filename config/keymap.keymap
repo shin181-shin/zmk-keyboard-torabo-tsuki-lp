@@ -19,7 +19,7 @@
 
 &trackball_peripheral_listener {
     scroller {
-        layers = <4>;
+        layers = <2>;
         input-processors = <&zip_xy_to_scroll_mapper>;
     };
 };
