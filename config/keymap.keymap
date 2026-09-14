@@ -63,7 +63,7 @@
         layer_2 {
             bindings = <
 &trans  &trans            &trans            &trans          &trans      &trans                    &trans      &trans      &trans      &trans      &trans      &trans
-&none   &kp LS(NUMBER_1)  &kp LS(NUMBER_2)  &kp LS(N3)      &kp LS(N4)  &kp LS(N5)                &kp LS(N6)  &kp LS(N7)  &kp LS(N8)  &kp LS(N9)  &kp LS(N0)  &kp LS(NUHS)
+&none   &kp LS(NUMBER_1)  &kp LS(NUMBER_2)  &kp LS(N3)      &kp LS(N4)  &kp LS(N5)                &kp LS(N6)  &kp LS(N7)  &kp LS(N8)  &kp LS(N9)  &kp LS(N0)  &kp LS(EQUAL)
 &none   &none             &none             &msc SCRL_UP    &mkp LCLK   &mkp RCLK   &none  &none  &none       &none       &kp LBKT    &kp RBKT    &kp NUHS    &none
 &none   &none             &none             &msc SCRL_DOWN  &none       &none       &none  &none  &none       &none       &kp BSLH    &none       &kp QMARK   &none
 &none   &none             &none             &none           &none       &none       &none  &none  &none       &none       &none       &none       &none       &none
