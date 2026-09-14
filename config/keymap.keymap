@@ -6,11 +6,13 @@
 &lt {
     flavor = "balanced";
     bindings = <&mo>, <&kp>;
+
     tapping-term-ms = <150>;
 };
 
 &mt {
     bindings = <&kp>, <&kp>;
+
     tapping-term-ms = <150>;
     flavor = "balanced";
 };
@@ -40,19 +42,19 @@
 
         layer_0 {
             bindings = <
-&none             &none         &none         &none  &none      &none                                         &none               &none  &none      &none     &none                     &none
-&kp TAB           &kp Q         &kp W         &kp E  &kp R      &kp T                                         &kp Y               &kp U  &kp I      &kp O     &kp P                     &kp KP_MINUS
-&kp BACKSPACE     &kp A         &kp S         &kp D  &kp F      &kp G               &none        &none        &kp H               &kp J  &lt 4 K    &kp L     &kp SEMI                  &kp ENTER
-&kp LSHFT         &kp Z         &kp X         &kp C  &kp V      &kp B               &lt 3 LSHFT  &kp DEL      &kp N               &kp M  &kp COMMA  &kp DOT   &mt RIGHT_SHIFT UP_ARROW  &kp SLASH
-&kp LEFT_CONTROL  &kp LEFT_GUI  &kp LEFT_ALT  &none  &mkp LCLK  &lt 2 INT_MUHENKAN  &lt 1 SPACE  &lt 1 SPACE  &lt 2 INT_MUHENKAN  &none  &none      &kp LEFT  &mt RCTRL DOWN            &kp RIGHT
+&none             &none         &none         &none  &none      &none                                         &none             &none  &none      &none     &none                     &none
+&kp TAB           &kp Q         &kp W         &kp E  &kp R      &kp T                                         &kp Y             &kp U  &kp I      &kp O     &kp P                     &kp MINUS
+&kp BACKSPACE     &kp A         &kp S         &kp D  &kp F      &kp G               &none        &none        &kp H             &kp J  &lt 4 K    &kp L     &kp SEMI                  &kp ENTER
+&kp LSHFT         &kp Z         &kp X         &kp C  &kp V      &kp B               &lt 3 LSHFT  &kp DEL      &kp N             &kp M  &kp COMMA  &kp DOT   &mt RIGHT_SHIFT UP_ARROW  &kp SLASH
+&kp LEFT_CONTROL  &kp LEFT_GUI  &kp LEFT_ALT  &none  &mkp LCLK  &lt 2 INT_MUHENKAN  &lt 1 SPACE  &lt 1 SPACE  &lt 2 INT_HENKAN  &none  &none      &kp LEFT  &mt RCTRL DOWN            &kp RIGHT
             >;
         };
 
         layer_1 {
             bindings = <
 &trans           &trans          &trans           &trans           &trans           &trans                  &trans         &trans          &trans        &trans     &trans       &trans
-&kp ESCAPE       &kp F10         &kp KP_NUMBER_7  &kp KP_NUMBER_8  &kp KP_NUMBER_9  &trans                  &kp PAGE_UP    &trans          &kp UP_ARROW  &trans     &trans       &kp LS(KP_MINUS)
-&none            &kp RS(INT_RO)  &kp KP_NUMBER_4  &kp KP_NUMBER_4  &kp KP_NUMBER_6  &trans  &trans  &trans  &kp PAGE_DOWN  &kp LEFT_ARROW  &kp DOWN      &kp RIGHT  &kp LS(SQT)  &trans
+&kp ESCAPE       &kp F10         &kp KP_NUMBER_7  &kp KP_NUMBER_8  &kp KP_NUMBER_9  &trans                  &kp PAGE_UP    &trans          &kp UP_ARROW  &trans     &trans       &kp LS(MINUS)
+&none            &kp RS(INT_RO)  &kp KP_NUMBER_4  &kp KP_NUMBER_5  &kp KP_NUMBER_6  &trans  &trans  &trans  &kp PAGE_DOWN  &kp LEFT_ARROW  &kp DOWN      &kp RIGHT  &kp LS(SQT)  &trans
 &kp KP_MULTIPLY  &kp KP_DIVIDE   &kp KP_NUMBER_1  &kp KP_NUMBER_2  &kp KP_NUMBER_3  &trans  &trans  &trans  &none          &trans          &trans        &trans     &trans       &trans
 &trans           &trans          &kp KP_NUMBER_0  &trans           &kp KP_NUMBER_0  &trans  &trans  &trans  &trans         &trans          &trans        &trans     &trans       &trans
             >;
@@ -91,10 +93,11 @@
 };
 
 /* トラックボールのスクロール切り替え（汎用リスナー定義） */
+
 / {
     input_listeners {
         compatible = "zmk,input-listeners";
-        
+
         scroll_listener {
             layers = <4>;
             input-processors = <&zip_scroll_scaler 1 1>;
