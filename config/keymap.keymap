@@ -3,7 +3,7 @@
 #include <dt-bindings/zmk/keys.h>
 #include <dt-bindings/zmk/pointing.h>
 
-// 👇️ 公式ガイドに書かれている通り、プロセッサの定義を読み込みます
+// 👇️ インプットプロセッサ（ボールスクロール）の定義を読み込みます
 #include <input/processors.dtsi>
 
 &lt {
@@ -91,14 +91,12 @@
 &trans     &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
 &kp LCTRL  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
             >;
-        }
+        }; // 👈️ ここにセミコロン「;」をしっかり補完しました！
     };
 };
 
-// 👇️【最下部】torabo-tsuki LPの「本当のリスナー名」にスクロール処理を上書きします！
-&central_listener {
-    scroller {
-        layers = <4>; // レイヤー4の時だけ有効化
-        input-processors = <&zip_xy_to_scroll_mapper>; // スクロールに変換
-    };
+// 👇️ 公式ガイド通り、既存のtrackballに対して直接プロセッサを設定
+&trackball {
+    input-processors = <&zip_xy_to_scroll_mapper>;
+    scroll-layers = <4>;
 };
