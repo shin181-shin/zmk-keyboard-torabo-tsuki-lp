@@ -18,16 +18,6 @@
 };
 
 / {
-    trackball_peripheral_listener {
-        compatible = "zmk,input-listener";
-        device = <&trackball>;
-
-        scroller {
-            layers = <4>;
-            input-processors = <&zip_scroll_scaler 1 1>;
-        };
-    };
-
     combos {
         compatible = "zmk,combos";
 
@@ -98,6 +88,9 @@
 &trans     &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
 &kp LCTRL  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
             >;
+            
+            /* ★このレイヤーにいる間、トラックボールをスクロールにする魔法の追加設定★ */
+            input-processor = <&zip_xy_to_scroll_mapper>;
         };
     };
 };
