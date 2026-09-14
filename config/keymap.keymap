@@ -11,6 +11,13 @@
     };
 };
 
+&trackball_peripheral_listener {
+    scroller {
+        layers = <4>;
+        input-processors = <&zip_xy_to_scroll_mapper>;
+    };
+};
+
 
 &lt {
     flavor = "balanced";
