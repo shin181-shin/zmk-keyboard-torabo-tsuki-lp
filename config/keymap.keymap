@@ -94,11 +94,11 @@
     };
 };
 
-// ==========================================
-// torabo-tsuki LPのベースドライバーを直接上書きする正しい記述法
-// ==========================================
-#if DT_NODE_HAS_STATUS(DT_NODELABEL(trackball), okay)
-&trackball {
-    scroll-layers = <2>; // レイヤー2の時はカーソル移動ではなく「スクロール」にする設定
-};
-#endif
+#if DT_NODE_HAS_STATUS(DT_NODELABEL(trackball_central), okay)
+#include <input/processors.dtsi>
+
+&central_listener {
+    scroller {
+        layers = <2>;                                   // レイヤー2を指定
+        input-processors = <&zip_xy_to_scroll_mapper>; // スクロールに変換
+    };
