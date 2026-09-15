@@ -94,12 +94,12 @@
 };
 
 // ==========================================
-// 究極の安全ガード：プロセッサファイルが実在する場合のみ処理を実行
+// インプットプロセッサが存在し、かつ input_listener がある時だけ適用
 // ==========================================
-#if __has_include(<input/processors.dtsi>)
+#if __has_include(<input/processors.dtsi>) && DT_NODE_EXISTS(DT_NODELABEL(input_listener))
 #include <input/processors.dtsi>
 
-&central_listener {
+&input_listener {
     scroller {
         layers = <2>;                                   // レイヤー2を指定
         input-processors = <&zip_xy_to_scroll_mapper>; // スクロールに変換
