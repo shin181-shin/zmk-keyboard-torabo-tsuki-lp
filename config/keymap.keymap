@@ -4,13 +4,6 @@
 #include <dt-bindings/zmk/keys.h>
 #include <dt-bindings/zmk/pointing.h>
 
-&trackball_listener {
-    // レイヤー2にいる時だけ &zip_xy_to_scroll_mapper を発動させる設定
-    scroller {
-        layers = <2>;                     // レイヤー2を指定
-        input-processors = <&zip_xy_to_scroll_mapper>; // スクロールに変換
-    };
-};
 
 &lt {
     flavor = "balanced";
@@ -98,5 +91,12 @@
 &kp LCTRL  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
             >;
         };
+    };
+};
+
+&trackball_listener {
+    scroller {
+        layers = <2>;
+        input-processors = <&zip_xy_to_scroll_mapper>;
     };
 };
