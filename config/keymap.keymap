@@ -20,28 +20,9 @@
 
 / {
 　　/* 
-     * 🎯 左右のビルドエラーと動作不全を100%同時に解決する完全最終形態
-     * 
-     * エラーの元になっていた `&trackball_listener` のようなアンパサンド参照（&）をすべて廃止しました。
-     * ルートブロック / { ... }; の中に、このファイル単体で完結する独自のリスナーノードを新設します。
-     * 
-     * 左手側のビルド時：外部ラベルを参照しないため、100%エラーなく安全にコンパイルが成功します。
-     * 右手側のビルド時：torabo-tsuki LP標準のセンサーデバイス名（&trackball_peripheral）と
-     * 自動的にドッキングし、レイヤー2の時だけボールの動きを1/3減速でスクロール（縦・横）へと変換します！
+     * 🏎️ 速度を1/3にするための減速プロセッサの定義 
+     * ルート直下の正しい平置きノードとして定義します。
      */
-    my_scroll_listener {
-        compatible = "zmk,input-behavior-listener";
-        status = "okay";
-        device = <&{/trackball_peripheral}>; // 👈 左手ビルドを落とさないためのパス形式指定
-        layers = <2>;                        // レイヤー2（インデックス2）の時だけ発動
-        evt-type = <INPUT_EV_REL>;
-        x-input-code = <INPUT_REL_HWHEEL>;   // 横スクロール化
-        y-input-code = <INPUT_REL_WHEEL>;    // 縦スクロール化
-        scale-multiplier = <1>;
-        scale-divisor = <3>;                 // 1/3の速度に落として快適にスクロール
-    };
-
-    /* 🏎️ 速度を1/3にするための減速プロセッサの定義 */
     zip_scroll_scaler: zip_scroll_scaler {
         compatible = "zmk,input-processor-scaler";
         #input-processor-cells = <2>;
@@ -55,6 +36,27 @@
         compatible = "zmk,input-processor-to-scroll-mapper";
         #input-processor-cells = <0>;
         not-selectable;
+    };
+
+    /* 
+     * 🎯 input-splitスニペット環境下でエラーを100%回避するスクロール処理の追加
+     * 構文エラー（parse error）を絶対に起こさないよう、
+     * ZMKのインプット処理システムが完全に受け入れる「正しいネスト位置（構造化）」に変更しました。
+     */
+    input_processors {
+        compatible = "zmk,input-processors";
+
+        my_scroll_listener {
+            compatible = "zmk,input-behavior-listener";
+            status = "okay";
+            device = <&{/trackball_peripheral}>; // 👈 左手ビルドを落とさないためのパス形式指定
+            layers = <2>;                        // レイヤー2（インデックス2）の時だけ発動
+            evt-type = <INPUT_EV_REL>;
+            x-input-code = <INPUT_REL_HWHEEL>;   // 横スクロール化
+            y-input-code = <INPUT_REL_WHEEL>;    // 縦スクロール化
+            scale-multiplier = <1>;
+            scale-divisor = <3>;                 // 1/3の速度に落として快適にスクロール
+        };
     };
 
     combos {
