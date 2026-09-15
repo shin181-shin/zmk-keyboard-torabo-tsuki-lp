@@ -93,7 +93,7 @@
     };
 };
 
-   // 🏎️ スクロール速度を1/3にするための減速プロセッサの定義を追加
+  // 🏎️ 速度を1/3にするカスタムプロセッサの定義
     zip_scroll_scaler: zip_scroll_scaler {
         compatible = "zmk,input-processor-scaler";
         #input-processor-cells = <2>;
@@ -103,9 +103,17 @@
     };
 };
 
-// 🎯 torabo-tsuki LP のトラックボールにスクロール化設定を適用
+// 🎯 エラー回避のため、明示的に新しい標準ラベル名（zip_xy_to_scroll_mapper）を再定義
+/ {
+    zip_xy_to_scroll_mapper: zip_xy_to_scroll_mapper {
+        compatible = "zmk,input-processor-to-scroll-mapper";
+        #input-processor-cells = <0>;
+        not-selectable;
+    };
+};
+
+// torabo-tsuki LP のトラックボールリスナーにバインド
 &trackball_listener {
-    // レイヤー2にいる時だけ「1/3に減速」して「スクロールに変換」する
     input-processors = <&zip_scroll_scaler 1 3>, <&zip_xy_to_scroll_mapper>;
     layer = <2>;
 };
