@@ -94,7 +94,12 @@
     };
 };
 
-#if DT_NODE_HAS_STATUS(DT_NODELABEL(trackball_central), okay)
+/ ==========================================
+// 右手（プロセッサ機能を持たない側）を完全に除外するガード
+// ==========================================
+#ifdef KEYMAP_DRAWER
+#include <input/processors.dtsi>
+#elif defined(CONFIG_ZMK_INPUT_PROCESSOR)
 #include <input/processors.dtsi>
 
 &central_listener {
@@ -102,3 +107,5 @@
         layers = <2>;                                   // レイヤー2を指定
         input-processors = <&zip_xy_to_scroll_mapper>; // スクロールに変換
     };
+};
+#endif
