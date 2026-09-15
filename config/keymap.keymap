@@ -1,11 +1,18 @@
 // =========================================================================
-// 1. 右手ビルド時のエラーを防ぐ身代わり（ダミー定義）を1行目に配置します
+// 1. 【最重要】インプロセッサの定義ファイルを「一番先頭（1行目）」で読み込みます。
+// ただし、右手側での「ファイル不在エラー」を防ぐため、コンパイラの条件分岐で100%保護します。
 // =========================================================================
+#if defined(CONFIG_ZMK_INPUT_PROCESSOR) || defined(KEYMAP_DRAWER)
+#include <input/processors.dtsi>
+#endif
 
-/ {
-    input_listener: input_listener {
-    };
-};
+// 右手ビルド時の未定義エラーを防ぐ身代わり（ダミー定義）
+/ { input_listener: input_listener {}; };
+
+#include <behaviors.dtsi>
+#include <dt-bindings/zmk/bt.h>
+#include <dt-bindings/zmk/keys.h>
+#include <dt-bindings/zmk/pointing.h>
 
 &lt {
     flavor = "balanced";
@@ -46,11 +53,11 @@
 
         layer_0 {
             bindings = <
-&none             &none         &none         &none  &none      &none                                         &none             &none  &none      &none     &none                     &none
-&kp TAB           &kp Q         &kp W         &kp E  &kp R      &kp T                                         &kp Y             &kp U  &kp I      &kp O     &kp P                     &kp MINUS
-&kp BACKSPACE     &kp A         &kp S         &kp D  &kp F      &kp G               &none        &none        &kp H             &kp J  &kp K      &kp L     &kp SEMI                  &kp ENTER
-&kp LSHFT         &kp Z         &kp X         &kp C  &kp V      &kp B               &lt 3 LSHFT  &kp DEL      &kp N             &kp M  &kp COMMA  &kp DOT   &mt RIGHT_SHIFT UP_ARROW  &kp SLASH
-&kp LEFT_CONTROL  &kp LEFT_GUI  &kp LEFT_ALT  &mo 2  &mkp LCLK  &lt 2 INT_MUHENKAN  &lt 1 SPACE  &lt 1 SPACE  &lt 2 INT_HENKAN  &none  &none      &kp LEFT  &mt RCTRL DOWN            &kp RIGHT
+&none             &none         &none         &none        &none      &none                                         &none             &none  &none      &none     &none                     &none
+&kp TAB           &kp Q         &kp W         &kp E        &kp R      &kp T                                         &kp Y             &kp U  &kp I      &kp O     &kp P                     &kp MINUS
+&kp BACKSPACE     &kp A         &kp S         &kp D        &kp F      &kp G               &none        &none        &kp H             &kp J  &kp K      &kp L     &kp SEMI                  &kp ENTER
+&kp LSHFT         &kp Z         &kp X         &kp C        &kp V      &kp B               &lt 3 LSHFT  &kp DEL      &kp N             &kp M  &kp COMMA  &kp DOT   &mt RIGHT_SHIFT UP_ARROW  &kp SLASH
+&kp LEFT_CONTROL  &kp LEFT_GUI  &kp LEFT_ALT  &mo 2        &mkp LCLK  &lt 2 INT_MUHENKAN  &lt 1 SPACE  &lt 1 SPACE  &lt 2 INT_HENKAN  &none  &none      &kp LEFT  &mt RCTRL DOWN            &kp RIGHT
             >;
         };
 
@@ -96,22 +103,13 @@
     };
 };
 
-// =========================================================================
+// ==========================================
 // 2. 本物の「input_listener」を参照（&）で上書きします。
-// これにより通常ポインタ移動の競合が消え、レイヤー2で完璧にスクロール化します。
-// =========================================================================
-
+// 先頭で正しくインクルードを読み込んだため、&zip_xy_to_scroll_mapper が100%機能します。
+// ==========================================
 &input_listener {
     scroller {
         layers = <2>;
         input-processors = <&zip_xy_to_scroll_mapper>;
     };
 };
-
-// ビルドガイドで指示されている定義ファイルを最後にインクルード
-
-#include <input/processors.dtsi>
-#include <behaviors.dtsi>
-#include <dt-bindings/zmk/bt.h>
-#include <dt-bindings/zmk/keys.h>
-#include <dt-bindings/zmk/pointing.h>
