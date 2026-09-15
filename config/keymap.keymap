@@ -17,16 +17,36 @@
 };
 
 / {
+    /* 🏎️ 速度を快適な1/3速に落とすための減速プロセッサの定義 */
+    zip_scroll_scaler: zip_scroll_scaler {
+        compatible = "zmk,input-processor-scaler";
+        #input-processor-cells = <2>;
+        type = <INPUT_EV_REL>;
+        codes = <INPUT_REL_HWHEEL>, <INPUT_REL_WHEEL>;
+        track-remainders;
+    };
+
     /* 
-     * 🎯 共有いただいたZennの公式仕様通りのスクロール化マージ
-     * 
-     * 一切のパースエラーや左右の未定義エラーを起こさず、
-     * レイヤー2（親指ホールド時）に入った瞬間に、ボールが縦横スクロールへと切り替わります！
+     * 🎯 XY軸の移動をOSの縦横スクロール（ホイール）に強制変換するプロセッサの定義
+     * これが不足していた（あるいはスニペット側と噛み合っていなかった）ため、
+     * ビルドが通っても実機でスクロールが動かない状態になっていました。
+     */
+    zip_xy_to_scroll_mapper: zip_xy_to_scroll_mapper {
+        compatible = "zmk,input-processor-to-scroll-mapper";
+        #input-processor-cells = <0>;
+        not-selectable;
+    };
+
+    /*
+     * 🏁 Zennのチートシートに基づく完璧な上書き合流構造
+     * レイヤー2（親指ホールド時）の時だけ、
+     * 「スクロールに変換（mapper）」し、さらに「1/3に減速（scaler）」させる命令を
+     * トラックボールの処理ライン（trackball_listener）へ100%確実に流し込みます！
      */
     trackball_listener {
         scroller {
             layers = <2>;
-            input-processors = <&zip_xy_to_scroll_mapper>;
+            input-processors = <&zip_xy_to_scroll_mapper>, <&zip_scroll_scaler 1 3>;
         };
     };
 
