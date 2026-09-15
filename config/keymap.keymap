@@ -5,26 +5,18 @@
 #include <input/processors.dtsi> // 👈 インプットプロセッサに必須のヘッダーを追加
 
 /* 
- * 🎯 トラブルの元だったダミー定義（trackball_peripheral）を削除。
- * 代わりに、スニペットが提供する正規の共通定義ブロック（&trackball_peripheral_listener）を使用します。
- * 
- * 💡 左手側ビルド時に「未定義エラー」で落ちるのを防ぐため、
- * ZMKの「/omit-if-no-ref/」または未定義を許容する構文ルールに従い、
- * 搭載側（右手等）にこのラベルが存在するときだけ安全に結合させます。
+ * 🎯 左右ビルドエラーと動作不全を同時に解決する条件分岐
+ * 左手側のビルド時には trackball_peripheral_listener が無いためエラーになります。
+ * プリプロセッサを使い、「センサー側（通常は右側）のビルド時のみ」この設定を有効にします。
  */
-/ {
-    #ifdef KEYMAP_DRAWER
-    // プレビュー表示用などのフォールバック（無視してOKです）
-    #endif
-};
-
+#if DT_NODE_EXISTS(DT_NODELABEL(trackball_peripheral_listener))
 &trackball_peripheral_listener {
-    status = "okay";
     scroller {
         layers = <2>;
         input-processors = <&zip_scroll_scaler 1 3>, <&zip_xy_to_scroll_mapper>;
     };
 };
+#endif
 
 &lt {
     flavor = "balanced";
