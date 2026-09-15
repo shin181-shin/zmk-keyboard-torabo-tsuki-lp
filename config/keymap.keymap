@@ -18,7 +18,6 @@
 };
 
 / {
-　
     combos {
         compatible = "zmk,combos";
 
@@ -62,7 +61,8 @@
         };
 
         layer_2 {
-　　　　　　　trackball-bindings = <&msc SCRL_DOWN &msc SCRL_UP>; // 👈 ボールを直接スクロール化
+　　　　　　　trackball-bindings = <&msc SCRL_DOWN &msc SCRL_UP>;
+
             bindings = <
 &trans  &trans            &trans            &trans          &trans      &trans                    &trans      &trans      &trans      &trans      &trans      &trans
 &none   &kp LS(NUMBER_1)  &kp LS(NUMBER_2)  &kp LS(N3)      &kp LS(N4)  &kp LS(N5)                &kp LS(N6)  &kp LS(N7)  &kp LS(N8)  &kp LS(N9)  &kp LS(N0)  &kp LS(EQUAL)
