@@ -2,6 +2,7 @@
 #include <dt-bindings/zmk/bt.h>
 #include <dt-bindings/zmk/keys.h>
 #include <dt-bindings/zmk/pointing.h>
+#include <input/processors.dtsi> // 👈 インプットプロセッサに必須のヘッダーを追加
 
 &lt {
     flavor = "balanced";
@@ -90,4 +91,21 @@
             >;
         };
     };
+};
+
+   // 🏎️ スクロール速度を1/3にするための減速プロセッサの定義を追加
+    zip_scroll_scaler: zip_scroll_scaler {
+        compatible = "zmk,input-processor-scaler";
+        #input-processor-cells = <2>;
+        type = <INPUT_EV_REL>;
+        codes = <INPUT_REL_HWHEEL>, <INPUT_REL_WHEEL>;
+        track-remainders;
+    };
+};
+
+// 🎯 torabo-tsuki LP のトラックボールにスクロール化設定を適用
+&trackball_listener {
+    // レイヤー2にいる時だけ「1/3に減速」して「スクロールに変換」する
+    input-processors = <&zip_scroll_scaler 1 3>, <&zip_xy_to_scroll_mapper>;
+    layer = <2>;
 };
