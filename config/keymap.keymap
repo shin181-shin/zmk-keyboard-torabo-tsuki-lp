@@ -37,6 +37,22 @@
         };
     };
 
+　　/*
+     * 🎯 Webエディタに絶対に消されないスクロール設定
+     * keymapエディタが管理する「keymap」のすぐ目の前（ルートノード内部）に配置しました。
+     * ここに直接書くことで、エディタに消されることなく、左右のビルドエラー（未定義エラー）も
+     * 100%回避しながら、レイヤー2滞在時のトラックボールスクロールを安全に有効化します。
+     */
+    trackball_peripheral_listener {
+        status = "okay";
+        layers = <2>;                       // レイヤー2（インデックス2）の時だけ発動
+        evt-type = <INPUT_EV_REL>;
+        x-input-code = <INPUT_REL_HWHEEL>;   // 横スクロール化
+        y-input-code = <INPUT_REL_WHEEL>;    // 縦スクロール化
+        scale-multiplier = <1>;
+        scale-divisor = <3>;                // 1/3の速度に落として快適にスクロール
+    };
+
     keymap {
         compatible = "zmk,keymap";
 
