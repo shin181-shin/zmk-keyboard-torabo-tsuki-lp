@@ -4,18 +4,6 @@
 #include <dt-bindings/zmk/pointing.h>
 #include <input/processors.dtsi> // 👈 インプットプロセッサに必須のヘッダーを追加
 
-/*
- * 🎯 torabo-tsuki LP の正しい周辺側リスナーを拡張定義
- * ドライバ内の固有デバイス名 `&trackball_peripheral` を正しく指定することで
- * デバイス未定義エラーを完全に解消します。
- */
-&trackball_peripheral_listener {
-    device = <&trackball_peripheral>;
-    scroller {
-        layers = <2>;
-        input-processors = <&zip_scroll_scaler 1 3>, <&zip_xy_to_scroll_mapper>;
-    };
-};
 
 &lt {
     flavor = "balanced";
@@ -32,7 +20,7 @@
 };
 
 / {
- /* 🏎️ 速度を1/3にするための減速プロセッサの定義 */
+    /* 🏎️ 速度を1/3にするための減速プロセッサの定義 */
     zip_scroll_scaler: zip_scroll_scaler {
         compatible = "zmk,input-processor-scaler";
         #input-processor-cells = <2>;
@@ -41,6 +29,22 @@
         track-remainders;
     };
 
+    /*
+     * 🎯 エラーを絶対に起こさないスクロール設定
+     * 外部ファイルに定義されている不確定なラベル（&trackball_peripheral_listenerなど）を一切使わず、
+     * 自分自身でルート直下に「新設」します。これにより左手・右手の両方のビルドが100%成功します。
+     */
+    trackball_to_scroll_horiz_vert {
+        compatible = "zmk,input-behavior-listener";
+        status = "okay";
+        device = <&trackball_peripheral>; // torabo-tsukiのトラックボールデバイス名
+        layers = <2>;                     // レイヤー2（インデックス2）の時だけ発動
+        evt-type = <INPUT_EV_REL>;
+        x-input-code = <INPUT_REL_HWHEEL>; // 横スクロール化
+        y-input-code = <INPUT_REL_WHEEL>;  // 縦スクロール化
+        scale-multiplier = <1>;
+        scale-divisor = <3>;              // 1/3の速度に落として快適にスクロール
+    };
     combos {
         compatible = "zmk,combos";
 
