@@ -94,9 +94,16 @@
     };
 };
 
-&trackball_listener {
-    scroller {
-        layers = <2>;
-        input-processors = <&zip_xy_to_scroll_mapper>;
+/ {
+    // 新しいZMK環境では、既存のものを上書きするのではなく、
+    // 独自の「スクロール用リスナー」を新しく定義して登録します
+    my_scroll_listener: my_scroll_listener {
+        compatible = "zmk,input-listener";
+        device = <&trackball>; // トラックボールの生のデバイスを指定
+
+        scroller {
+            layers = <2>; // レイヤー2のときに発動
+            input-processors = <&zip_xy_to_scroll_mapper>;
+        };
     };
 };
