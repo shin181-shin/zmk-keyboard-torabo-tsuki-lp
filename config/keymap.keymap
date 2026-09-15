@@ -5,12 +5,25 @@
 #include <input/processors.dtsi> // 👈 インプットプロセッサに必須のヘッダーを追加
 
 /* 
- * 💡 左右ビルドエラーの完全回避策
- * トラックボールセンサーのラベル（trackball_peripheral）をキーマップの先頭で定義します。
- * これにより、左手側のビルド時にも「デバイスが存在しない」というエラーを100%回避できます。
+ * 🎯 トラブルの元だったダミー定義（trackball_peripheral）を削除。
+ * 代わりに、スニペットが提供する正規の共通定義ブロック（&trackball_peripheral_listener）を使用します。
+ * 
+ * 💡 左手側ビルド時に「未定義エラー」で落ちるのを防ぐため、
+ * ZMKの「/omit-if-no-ref/」または未定義を許容する構文ルールに従い、
+ * 搭載側（右手等）にこのラベルが存在するときだけ安全に結合させます。
  */
 / {
-    trackball_peripheral: trackball_peripheral { };
+    #ifdef KEYMAP_DRAWER
+    // プレビュー表示用などのフォールバック（無視してOKです）
+    #endif
+};
+
+&trackball_peripheral_listener {
+    status = "okay";
+    scroller {
+        layers = <2>;
+        input-processors = <&zip_scroll_scaler 1 3>, <&zip_xy_to_scroll_mapper>;
+    };
 };
 
 &lt {
@@ -28,26 +41,13 @@
 };
 
 / {
-   /* 🏎️ 速度を1/3にするための減速プロセッサの定義 */
+  /* 🏎️ 速度を1/3にするための減速プロセッサの定義 */
     zip_scroll_scaler: zip_scroll_scaler {
         compatible = "zmk,input-processor-scaler";
         #input-processor-cells = <2>;
         type = <INPUT_EV_REL>;
         codes = <INPUT_REL_HWHEEL>, <INPUT_REL_WHEEL>;
         track-remainders;
-    };
-
-    /* 🎯 独立した独自のスクロール処理リスナーの定義 */
-    trackball_to_scroll_horiz_vert {
-        compatible = "zmk,input-behavior-listener";
-        status = "okay";
-        device = <&trackball_peripheral>; // 先頭で定義したラベルを安全に参照
-        layers = <2>;                     // レイヤー2（インデックス2）の時だけ発動
-        evt-type = <INPUT_EV_REL>;
-        x-input-code = <INPUT_REL_HWHEEL>; // 横スクロール化
-        y-input-code = <INPUT_REL_WHEEL>;  // 縦スクロール化
-        scale-multiplier = <1>;
-        scale-divisor = <3>;               // 1/3の速度に落として快適にスクロール
     };
 
     /* 🛠️ マッパーの未定義エラーを回避するための明示的定義 */
