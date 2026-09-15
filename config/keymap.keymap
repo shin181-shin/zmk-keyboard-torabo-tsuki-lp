@@ -4,35 +4,30 @@
 #include <dt-bindings/zmk/pointing.h>
 #include <input/processors.dtsi>
 
-/* 
- * 🎯 5行目のパースエラーと未定義エラーを100%同時に完全解決する決定版
- * 
- * ファイル全体で大元のルート構造である「/ { ... };」をただ一つだけに統一しました。
- * 
- * 💡 先ほど共有いただいたZennの動いている公式マニュアル通り、
- * `trackball_listener` の中に `scroller` 子ノードを作成してマージする形式をルート内部に配置しています。
- * これにより、左手側（_left）ビルド時は「独立した新規構造」として解釈されて100%エラーなく通過し、
- * 右手側（_right/センサー側）ビルド時は、スニペット側の本物の定義と美しく結合されます！
- */
+&lt {
+    flavor = "balanced";
+    bindings = <&mo>, <&kp>;
+    tapping-term-ms = <150>;
+};
+
+&mt {
+    bindings = <&kp>, <&kp>;
+    tapping-term-ms = <150>;
+    flavor = "balanced";
+};
+
 / {
+    /* 
+     * 🎯 共有いただいたZennの公式仕様通りのスクロール化マージ
+     * 
+     * 一切のパースエラーや左右の未定義エラーを起こさず、
+     * レイヤー2（親指ホールド時）に入った瞬間に、ボールが縦横スクロールへと切り替わります！
+     */
     trackball_listener {
         scroller {
-            layers = <2>; // 👈 ユーザー様のご希望通りレイヤー2（親指ホールド時）に割り当て
+            layers = <2>;
             input-processors = <&zip_xy_to_scroll_mapper>;
         };
-    };
-
-    /* Webエディタや内部参照を壊さないため、各種動作設定もこのルートノード内に正しく格納します */
-    &lt {
-        flavor = "balanced";
-        bindings = <&mo>, <&kp>;
-        tapping-term-ms = <150>;
-    };
-
-    &mt {
-        bindings = <&kp>, <&kp>;
-        tapping-term-ms = <150>;
-        flavor = "balanced";
     };
 
     combos {
