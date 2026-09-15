@@ -5,13 +5,17 @@
 #include <input/processors.dtsi> // 👈 インプットプロセッサに必須のヘッダーを追加
 
 /* 
- * 🎯 左右のビルドエラーと動作不全を同時に解決する決定版
- * 左手側のビルド時に「ラベル未定義エラー」で落ちるのを防ぐため、空のベース定義を置きます。
- * 右手（センサー側）のビルド時は、ハードウェア側の本物の定義がこの中に自動でマージされるため、
+ * 🎯 左右のビルドエラーと動作不全を同時に解決する最終決定版
+ * 左手側のビルド時に「存在しないデバイス」を参照して落ちるのを防ぐため、
+ * deviceには安全に存在するルートノード「/」のパスを指定してパースエラーを100%回避します。
+ * 右手（センサー側）のビルド時は、スニペット側の本来のデバイス定義がこのリスナーに自動マージされるため、
  * トラックボールを殺すことなく、安全にスクロール設定をアドオンできます。
  */
 / {
     trackball_peripheral_listener: trackball_peripheral_listener {
+        compatible = "zmk,input-listener";
+        device = <&{/}>; // 👈 左手側ビルド用のエラー回避ダミーパス（アンパサンド参照を回避）
+        
         scroller {
             layers = <2>;
             input-processors = <&zip_scroll_scaler 1 3>, <&zip_xy_to_scroll_mapper>;
@@ -32,7 +36,9 @@
     tapping-term-ms = <150>;
     flavor = "balanced";
 };
-/* 🏎️ 速度を1/3にするための減速プロセッサの定義 */
+
+/ {
+    /* 🏎️ 速度を1/3にするための減速プロセッサの定義 */
     zip_scroll_scaler: zip_scroll_scaler {
         compatible = "zmk,input-processor-scaler";
         #input-processor-cells = <2>;
