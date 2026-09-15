@@ -93,16 +93,15 @@
         };
     };
 
-    // ==========================================
-    // 正しい位置：ルートブロック（ / ）の「内側」に移動しました
-    // ==========================================
+#if DT_NODE_HAS_STATUS(DT_NODELABEL(trackball), okay)
     my_scroller {
         compatible = "zmk,input-behavior-listener";
         device = <&trackball>;
 
         scroller {
-            layers = <2>; // レイヤー2の時に発動
+            layers = <2>;
             input-processors = <&zip_xy_to_scroll_mapper>;
         };
     };
-}; // ← ルートブロック全体の閉じカッコをここに配置
+#endif
+};
