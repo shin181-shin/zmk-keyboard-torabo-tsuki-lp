@@ -5,18 +5,19 @@
 #include <input/processors.dtsi> // 👈 インプットプロセッサに必須のヘッダーを追加
 
 /* 
- * 🎯 左右ビルドエラーと動作不全を同時に解決する条件分岐
- * 左手側のビルド時には trackball_peripheral_listener が無いためエラーになります。
- * プリプロセッサを使い、「センサー側（通常は右側）のビルド時のみ」この設定を有効にします。
+ * 🎯 左右のビルドエラーと動作不全を同時に解決する決定版
+ * 左手側のビルド時に「ラベル未定義エラー」で落ちるのを防ぐため、空のベース定義を置きます。
+ * 右手（センサー側）のビルド時は、ハードウェア側の本物の定義がこの中に自動でマージされるため、
+ * トラックボールを殺すことなく、安全にスクロール設定をアドオンできます。
  */
-#if DT_NODE_EXISTS(DT_NODELABEL(trackball_peripheral_listener))
-&trackball_peripheral_listener {
-    scroller {
-        layers = <2>;
-        input-processors = <&zip_scroll_scaler 1 3>, <&zip_xy_to_scroll_mapper>;
+/ {
+    trackball_peripheral_listener: trackball_peripheral_listener {
+        scroller {
+            layers = <2>;
+            input-processors = <&zip_scroll_scaler 1 3>, <&zip_xy_to_scroll_mapper>;
+        };
     };
 };
-#endif
 
 &lt {
     flavor = "balanced";
@@ -31,9 +32,7 @@
     tapping-term-ms = <150>;
     flavor = "balanced";
 };
-
-/ {
-  /* 🏎️ 速度を1/3にするための減速プロセッサの定義 */
+/* 🏎️ 速度を1/3にするための減速プロセッサの定義 */
     zip_scroll_scaler: zip_scroll_scaler {
         compatible = "zmk,input-processor-scaler";
         #input-processor-cells = <2>;
