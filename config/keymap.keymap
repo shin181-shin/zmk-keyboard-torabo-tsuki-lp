@@ -93,16 +93,11 @@
     };
 };
 
-// ==========================================
-// インプットプロセッサが存在し、かつ input_listener がある時だけ適用
-// ==========================================
-#if __has_include(<input/processors.dtsi>) && DT_NODE_EXISTS(DT_NODELABEL(input_listener))
 #include <input/processors.dtsi>
 
-&input_listener {
+&trackball_listener {
     scroller {
         layers = <2>;                                   // レイヤー2を指定
         input-processors = <&zip_xy_to_scroll_mapper>; // スクロールに変換
     };
 };
-#endif
