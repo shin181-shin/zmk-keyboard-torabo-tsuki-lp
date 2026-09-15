@@ -18,25 +18,7 @@
 };
 
 / {
-　　/* 
-     * 🎯 構文エラー（parse error）を100%完全に解決する最終決定版
-     * 
-     * 21行目でエラーを引き起こしていた「独自のノード名（my_scroll_listener等）」の自作を完全にやめました。
-     * input-splitスニペットが最初からルート直下に100%確実に定義している既存のノード名 `input_split` を使い、
-     * その内部に「レイヤー2の時だけ、1/3の速度で縦横スクロールホイールへ変換する」という標準設定を安全に流し込みます。
-     * 
-     * 左手側のビルド時：外部ラベルを参照せず、構文的にも干渉しないため、100%エラーなくコンパイルが成功します。
-     * 右手側のビルド時：本来の分割通信スニペットの設定と綺麗にマージ（合流）し、実機でボールスクロールが機能します！
-     */
-    input_split {
-        layers = <2>;                       // レイヤー2（インデックス2）の時だけ発動
-        evt-type = <INPUT_EV_REL>;
-        x-input-code = <INPUT_REL_HWHEEL>;   // 横スクロール化
-        y-input-code = <INPUT_REL_WHEEL>;    // 縦スクロール化
-        scale-multiplier = <1>;
-        scale-divisor = <3>;                // 1/3の速度に落として快適にスクロール
-    };
-
+　
     combos {
         compatible = "zmk,combos";
 
@@ -80,6 +62,7 @@
         };
 
         layer_2 {
+　　　　　　　trackball-bindings = <&msc SCRL_DOWN &msc SCRL_UP>; // 👈 ボールを直接スクロール化
             bindings = <
 &trans  &trans            &trans            &trans          &trans      &trans                    &trans      &trans      &trans      &trans      &trans      &trans
 &none   &kp LS(NUMBER_1)  &kp LS(NUMBER_2)  &kp LS(N3)      &kp LS(N4)  &kp LS(N5)                &kp LS(N6)  &kp LS(N7)  &kp LS(N8)  &kp LS(N9)  &kp LS(N0)  &kp LS(EQUAL)
