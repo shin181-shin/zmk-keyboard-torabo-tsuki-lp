@@ -88,23 +88,19 @@
 &trans     &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
 &trans     &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
 &kp LCTRL  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
-          >;
+        >;
         };
     };
 
-    // =========================================================================
-    // 正解：右手ビルドのエラーを完全に回避するため、ノードラベルを使わず
-    // ルート（ / ）の内側から直接スニペットの生成ノード（trackball_listener）を上書きします
-    // =========================================================================
-      trackball_listener {
+    // ==========================================
+    // 新しい独自定義を安全に追加する構造にしました
+    // ==========================================
+    trackball_listener {
         scroller {
-            layers = <2>;                                   // レイヤー2を指定
-            input-processors = <&zip_xy_to_scroll_mapper>; // スクロールに変換
-            
-            // 💡重要：スクロールに変換したイベントをここで確定させ、
-            // これ以降の「ポインタ移動」の標準処理をストップさせて競合を防ぎます
-            process-next; 
+            layers = <2>;
+            input-processors = <&zip_xy_to_scroll_mapper>;
         };
     };
-// ガイド通り最後にプロセッサの定義ファイルをインクルード
+};
+
 #include <input/processors.dtsi>
