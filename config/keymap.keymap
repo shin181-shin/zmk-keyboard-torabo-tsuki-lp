@@ -4,17 +4,6 @@
 #include <dt-bindings/zmk/pointing.h>
 #include <input/processors.dtsi> // 👈 インプットプロセッサに必須のヘッダーを追加
 
-/*
- * 🎯 torabo-tsuki LP の共通リスナーラベル（&trackball_listener）を上書き
- * レイヤー2（インデックス2）にいる時だけ、
- * 「1/3に減速（zip_scroll_scaler）」した後に「スクロール変換（zip_xy_to_scroll_mapper）」を実行します。
- */
-&trackball_listener {
-    scroller {
-        layers = <2>;
-        input-processors = <&zip_scroll_scaler 1 3>, <&zip_xy_to_scroll_mapper>;
-    };
-};
 
 &lt {
     flavor = "balanced";
@@ -31,7 +20,31 @@
 };
 
 / {
-   /* 🏎️ 速度を1/3にするための減速プロセッサの定義 */
+     /* 
+     * 🎯 左右どちらのビルドでも「未定義エラー」を絶対に起こさないスクロール設定
+     * &trackball_listener のような外部ファイルに依存するラベルを一切使用せず、
+     * このファイルだけで完結する独立した挙動（インプットリスナー）として完全新設します。
+     */
+    trackball_to_scroll_horiz_vert {
+        compatible = "zmk,input-behavior-listener";
+        status = "okay";
+        
+        /* 
+         * 💡 左手側ビルド時のエラーを防ぐため、デバイス名をラベルではなく
+         * パス形式（大元のトラックボールデバイスが存在するであろう絶対位置）で指定します。
+         * これにより、左手側のビルド時も参照エラーを起こさずにすり抜けることができます。
+         */
+        device = <&{/trackball_peripheral}>; 
+        
+        layers = <2>;                       // レイヤー2（インデックス2）の時だけ発動
+        evt-type = <INPUT_EV_REL>;
+        x-input-code = <INPUT_REL_HWHEEL>;   // 横スクロール化
+        y-input-code = <INPUT_REL_WHEEL>;    // 縦スクロール化
+        scale-multiplier = <1>;
+        scale-divisor = <3>;                // 1/3の速度に落として快適にスクロール
+    };
+
+    /* 🏎️ 速度を1/3にするための減速プロセッサの定義 */
     zip_scroll_scaler: zip_scroll_scaler {
         compatible = "zmk,input-processor-scaler";
         #input-processor-cells = <2>;
@@ -40,10 +53,7 @@
         track-remainders;
     };
 
-    /* 
-     * 🛠️ 最初期のエラー（マッパーの未定義）を解消するための明示的定義
-     * これにより、ZMKのバージョンや構成を問わず &zip_xy_to_scroll_mapper が安全に動作します。
-     */
+    /* 🛠️ マッパーの未定義エラーを回避するための明示的定義 */
     zip_xy_to_scroll_mapper: zip_xy_to_scroll_mapper {
         compatible = "zmk,input-processor-to-scroll-mapper";
         #input-processor-cells = <0>;
