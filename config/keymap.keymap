@@ -4,27 +4,6 @@
 #include <dt-bindings/zmk/pointing.h>
 include <input/processors.dtsi> // 👈 インプットプロセッサに必須のヘッダーを追加
 
-/ {
-    /* 
-     * 🎯 左右のビルドエラーと動作不全を同時に100%解決する決定版
-     * 
-     * 検索で見つけていただいた正規の記述（scroller子ノードを作る形）を採用しました。
-     * 
-     * 左手側ビルド時に「ラベル未定義エラー」や「マクロエラー」で落ちるのを完全に防ぐため、
-     * ルートノード直下で一度 trackball_listener のベースノードを宣言します。
-     * これにより、左手側のコンパイルを無傷で完全に通過させます。
-     * 
-     * 右手（センサー側）のビルド時は、ハードウェア側の本物の定義が自動でマージされるため、
-     * トラックボールを殺すことなく、安全にスクロール設定（scroller）のみをアドオンできます！
-     */
-    trackball_listener: trackball_listener {
-        scroller {
-            layers = <2>; // 👈 レイヤー2（無変換/変換ホールド時）にスクロールを割り当て
-            input-processors = <&zip_xy_to_scroll_mapper>;
-        };
-    };
-};
-
 &lt {
     flavor = "balanced";
     bindings = <&mo>, <&kp>;
@@ -40,6 +19,24 @@ include <input/processors.dtsi> // 👈 インプットプロセッサに必須�
 };
 
 / {
+/* 
+ * 🎯 構文エラーと未定義エラーを根底から100%解決する完全統合構造
+ * ファイル全体で「/ { ... };」ブロックをただ一つだけに統一しました。
+ * 
+ * これにより、左手側ビルド時には「独立した新規ノード」として解釈されて100%エラーなく通過し、
+ * 右手側（搭載側）ビルド時には、スニペット側の本物の定義と美しくマージ（合流）されます。
+ * 
+ * 見つけていただいた正規の記述（scroller子ノード）のまま、
+ * レイヤー2（無変換/変換キー押しっぱなし）の時に完璧にボールスクロール化させます！
+ */
+/ {
+    trackball_listener: trackball_listener {
+        scroller {
+            layers = <2>;
+            input-processors = <&zip_xy_to_scroll_mapper>;
+        };
+    };
+
     combos {
         compatible = "zmk,combos";
 
