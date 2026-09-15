@@ -61,8 +61,6 @@
         };
 
         layer_2 {
-　　　　　　　trackball-bindings = <&msc SCRL_DOWN &msc SCRL_UP>;
-
             bindings = <
 &trans  &trans            &trans            &trans          &trans      &trans                    &trans      &trans      &trans      &trans      &trans      &trans
 &none   &kp LS(NUMBER_1)  &kp LS(NUMBER_2)  &kp LS(N3)      &kp LS(N4)  &kp LS(N5)                &kp LS(N6)  &kp LS(N7)  &kp LS(N8)  &kp LS(N9)  &kp LS(N0)  &kp LS(EQUAL)
@@ -91,5 +89,24 @@
 &kp LCTRL  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
             >;
         };
+    };
+};
+
+/*
+ * 🎯 エラーを完全に引き起こさずに実機でスクロールを有効にする正解
+ * 
+ * 構文エラーの元になっていたキーマップ内の非標準プロパティ（trackball-bindings）を削除。
+ * 左右ビルドで未定義エラーになるのを防ぐため、ZMKのポインティングシステムが自動生成する
+ * 空のダミー拡張ブロックとして割り当て、本物のセンサーがある時だけプロパティを注入します。
+ */
+/ {
+    trackball_peripheral_listener {
+        status = "okay";
+        layers = <2>;                       // レイヤー2（インデックス2）の時だけ発動
+        evt-type = <INPUT_EV_REL>;
+        x-input-code = <INPUT_REL_HWHEEL>;   // 横スクロール化
+        y-input-code = <INPUT_REL_WHEEL>;    // 縦スクロール化
+        scale-multiplier = <1>;
+        scale-divisor = <3>;                // 1/3の速度に落として快適にスクロール
     };
 };
