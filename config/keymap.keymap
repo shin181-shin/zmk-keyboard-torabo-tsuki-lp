@@ -89,19 +89,16 @@
 &trans     &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
 &trans     &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
 &kp LCTRL  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
-            >;
+          >;
         };
     };
-
-#if DT_NODE_HAS_STATUS(DT_NODELABEL(trackball), okay)
-    my_scroller {
-        compatible = "zmk,input-behavior-listener";
-        device = <&trackball>;
-
-        scroller {
-            layers = <2>;
-            input-processors = <&zip_xy_to_scroll_mapper>;
-        };
-    };
-#endif
 };
+
+// ==========================================
+// torabo-tsuki LPのベースドライバーを直接上書きする正しい記述法
+// ==========================================
+#if DT_NODE_HAS_STATUS(DT_NODELABEL(trackball), okay)
+&trackball {
+    scroll-layers = <2>; // レイヤー2の時はカーソル移動ではなく「スクロール」にする設定
+};
+#endif
