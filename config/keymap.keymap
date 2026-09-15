@@ -6,13 +6,11 @@
 &lt {
     flavor = "balanced";
     bindings = <&mo>, <&kp>;
-
     tapping-term-ms = <150>;
 };
 
 &mt {
     bindings = <&kp>, <&kp>;
-
     tapping-term-ms = <150>;
     flavor = "balanced";
 };
