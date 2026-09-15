@@ -18,6 +18,16 @@
     };
 };
 
+/ {
+    /* 🏎️ 速度を1/3にするための減速プロセッサの定義をここに配置 */
+    zip_scroll_scaler: zip_scroll_scaler {
+        compatible = "zmk,input-processor-scaler";
+        #input-processor-cells = <2>;
+        type = <INPUT_EV_REL>;
+        codes = <INPUT_REL_HWHEEL>, <INPUT_REL_WHEEL>;
+        track-remainders;
+    };
+
 &lt {
     flavor = "balanced";
     bindings = <&mo>, <&kp>;
