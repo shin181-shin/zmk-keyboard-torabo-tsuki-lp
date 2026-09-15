@@ -91,13 +91,18 @@
           >;
         };
     };
-};
 
-#include <input/processors.dtsi>
-
-&trackball_listener {
-    scroller {
-        layers = <2>;                                   // レイヤー2を指定
-        input-processors = <&zip_xy_to_scroll_mapper>; // スクロールに変換
+    // =========================================================================
+    // 正解：右手ビルドのエラーを完全に回避するため、ノードラベルを使わず
+    // ルート（ / ）の内側から直接スニペットの生成ノード（trackball_listener）を上書きします
+    // =========================================================================
+    trackball_listener {
+        scroller {
+            layers = <2>;                                   // レイヤー2を指定
+            input-processors = <&zip_xy_to_scroll_mapper>; // スクロールに変換
+        };
     };
 };
+
+// ガイド通り最後にプロセッサの定義ファイルをインクルード
+#include <input/processors.dtsi>
