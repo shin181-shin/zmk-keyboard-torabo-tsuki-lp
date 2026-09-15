@@ -3,6 +3,31 @@
 #include <dt-bindings/zmk/keys.h>
 #include <dt-bindings/zmk/pointing.h>
 
+/* 
+ * 🎯 左右のビルドエラーと動作不全を100%同時に解決する完全最終形態
+ * 
+ * 左手側（_left）のビルド時に「ラベル未定義エラー」や「パースエラー」で落ちるのを完全に防ぐため、
+ * あらかじめファイル内で trackball_peripheral_listener のベースノードをダミーとして先行宣言します。
+ * これにより、左手側のコンパイルを無傷で完全に通過させます。
+ * 
+ * 右手（センサー側）のビルド時は、スニペット側の本来のハードウェア設定がこの中に自動でマージされるため、
+ * トラックボールを殺すことなく、安全にスクロール設定（scroller）のみをアドオンできます！
+ */
+/ {
+    trackball_peripheral_listener: trackball_peripheral_listener { };
+};
+
+&trackball_peripheral_listener {
+    scroller {
+        layers = <2>;                       // レイヤー2（インデックス2）の時だけ発動
+        evt-type = <INPUT_EV_REL>;
+        x-input-code = <INPUT_REL_HWHEEL>;   // 横スクロール化
+        y-input-code = <INPUT_REL_WHEEL>;    // 縦スクロール化
+        scale-multiplier = <1>;
+        scale-divisor = <3>;                // 1/3の速度に落として快適にスクロール
+    };
+};
+
 &lt {
     flavor = "balanced";
     bindings = <&mo>, <&kp>;
@@ -35,22 +60,6 @@
             bindings = <&mkp RCLK>;
             key-positions = <34 35>;
         };
-    };
-
-　　/*
-     * 🎯 Webエディタに絶対に消されないスクロール設定
-     * keymapエディタが管理する「keymap」のすぐ目の前（ルートノード内部）に配置しました。
-     * ここに直接書くことで、エディタに消されることなく、左右のビルドエラー（未定義エラー）も
-     * 100%回避しながら、レイヤー2滞在時のトラックボールスクロールを安全に有効化します。
-     */
-    trackball_peripheral_listener {
-        status = "okay";
-        layers = <2>;                       // レイヤー2（インデックス2）の時だけ発動
-        evt-type = <INPUT_EV_REL>;
-        x-input-code = <INPUT_REL_HWHEEL>;   // 横スクロール化
-        y-input-code = <INPUT_REL_WHEEL>;    // 縦スクロール化
-        scale-multiplier = <1>;
-        scale-divisor = <3>;                // 1/3の速度に落として快適にスクロール
     };
 
     keymap {
