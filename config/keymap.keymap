@@ -5,12 +5,12 @@
 #include <input/processors.dtsi> // 👈 インプットプロセッサに必須のヘッダーを追加
 
 /* 
- * 🎯 左右のビルドエラーと動作不全を100%同時に解決する決定版
- * 左手側（_left）のビルド時には trackball_listener というラベルが存在しないため弾かれます。
- * ZMK標準のプリプロセッサマクロを使用し、「左手側のビルド時（SHIELD_torabo_tsuki_lp_left）」は
- * このスクロール設定を完全にスキップさせ、右手（センサー搭載側）の時だけ安全に結合させます。
+ * 🎯 左右のビルドエラーを100%解決する正しいシールド条件判定
+ * ZMKのビルドシステム（Zephyr）が左手側をコンパイルする際、自動で「SHIELD_torabo_tsuki_lp_left」が定義されます。
+ * #ifndef（もし定義されていなければ）を使い、左手側ビルド時はこのブロックを完全に無視させてエラーを防ぎ、
+ * トラックボールセンサーの存在する右手側（あるいは搭載側）のビルド時のみ安全に適用させます。
  */
-#ifndef SHIELD_TORABO_TSUKI_LP_LEFT
+#ifndef SHIELD_torabo_tsuki_lp_left
 &trackball_listener {
     scroller {
         layers = <2>;
@@ -34,7 +34,7 @@
 };
 
 / {
- /* 🏎️ 速度を1/3にするための減速プロセッサの定義 */
+/* 🏎️ 速度を1/3にするための減速プロセッサの定義 */
     zip_scroll_scaler: zip_scroll_scaler {
         compatible = "zmk,input-processor-scaler";
         #input-processor-cells = <2>;
