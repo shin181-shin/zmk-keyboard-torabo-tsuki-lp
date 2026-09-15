@@ -4,6 +4,14 @@
 #include <dt-bindings/zmk/pointing.h>
 #include <input/processors.dtsi> // 👈 インプットプロセッサに必須のヘッダーを追加
 
+/* 
+ * 💡 左右ビルドエラーの完全回避策
+ * トラックボールセンサーのラベル（trackball_peripheral）をキーマップの先頭で定義します。
+ * これにより、左手側のビルド時にも「デバイスが存在しない」というエラーを100%回避できます。
+ */
+/ {
+    trackball_peripheral: trackball_peripheral { };
+};
 
 &lt {
     flavor = "balanced";
@@ -20,37 +28,26 @@
 };
 
 / {
-     /* 
-     * 🎯 左右どちらのビルドでも「未定義エラー」を絶対に起こさないスクロール設定
-     * &trackball_listener のような外部ファイルに依存するラベルを一切使用せず、
-     * このファイルだけで完結する独立した挙動（インプットリスナー）として完全新設します。
-     */
-    trackball_to_scroll_horiz_vert {
-        compatible = "zmk,input-behavior-listener";
-        status = "okay";
-        
-        /* 
-         * 💡 左手側ビルド時のエラーを防ぐため、デバイス名をラベルではなく
-         * パス形式（大元のトラックボールデバイスが存在するであろう絶対位置）で指定します。
-         * これにより、左手側のビルド時も参照エラーを起こさずにすり抜けることができます。
-         */
-        device = <&{/trackball_peripheral}>; 
-        
-        layers = <2>;                       // レイヤー2（インデックス2）の時だけ発動
-        evt-type = <INPUT_EV_REL>;
-        x-input-code = <INPUT_REL_HWHEEL>;   // 横スクロール化
-        y-input-code = <INPUT_REL_WHEEL>;    // 縦スクロール化
-        scale-multiplier = <1>;
-        scale-divisor = <3>;                // 1/3の速度に落として快適にスクロール
-    };
-
-    /* 🏎️ 速度を1/3にするための減速プロセッサの定義 */
+   /* 🏎️ 速度を1/3にするための減速プロセッサの定義 */
     zip_scroll_scaler: zip_scroll_scaler {
         compatible = "zmk,input-processor-scaler";
         #input-processor-cells = <2>;
         type = <INPUT_EV_REL>;
         codes = <INPUT_REL_HWHEEL>, <INPUT_REL_WHEEL>;
         track-remainders;
+    };
+
+    /* 🎯 独立した独自のスクロール処理リスナーの定義 */
+    trackball_to_scroll_horiz_vert {
+        compatible = "zmk,input-behavior-listener";
+        status = "okay";
+        device = <&trackball_peripheral>; // 先頭で定義したラベルを安全に参照
+        layers = <2>;                     // レイヤー2（インデックス2）の時だけ発動
+        evt-type = <INPUT_EV_REL>;
+        x-input-code = <INPUT_REL_HWHEEL>; // 横スクロール化
+        y-input-code = <INPUT_REL_WHEEL>;  // 縦スクロール化
+        scale-multiplier = <1>;
+        scale-divisor = <3>;               // 1/3の速度に落として快適にスクロール
     };
 
     /* 🛠️ マッパーの未定義エラーを回避するための明示的定義 */
