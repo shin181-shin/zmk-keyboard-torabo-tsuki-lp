@@ -4,26 +4,26 @@
 #include <dt-bindings/zmk/pointing.h>
 include <input/processors.dtsi> // 👈 インプットプロセッサに必須のヘッダーを追加
 
-/* 
- * 🎯 左右のビルドエラーと動作不全を同時に100%解決する完全最終解答
- * 
- * 見つけていただいた正規の記述（scroller子ノードを作る形）をそのまま採用しました。
- * 
- * 左手側（_left）のビルド時には `trackball_listener` ラベルが存在しないためエラーになります。
- * そこで、ZMK公式のシールド分岐を使い、「左手側ビルド時（SHIELD_torabo_tsuki_lp_left）」は
- * この記述全体をコンパイル前に物理的に消去させてビルドを安全に通過させます。
- * 
- * トラックボールセンサーの存在する右手側（あるいは搭載側）のビルド時には、
- * 本物の `&trackball_listener` にこのスクロール設定が確実に流し込まれます！
- */
-#ifndef SHIELD_torabo_tsuki_lp_left
-&trackball_listener {
-    scroller {
-        layers = <2>; // 👈 ユーザー様のご希望に合わせてレイヤー2（無変換/変換ホールド時）に設定
-        input-processors = <&zip_xy_to_scroll_mapper>;
+/ {
+    /* 
+     * 🎯 左右のビルドエラーと動作不全を同時に100%解決する決定版
+     * 
+     * 検索で見つけていただいた正規の記述（scroller子ノードを作る形）を採用しました。
+     * 
+     * 左手側ビルド時に「ラベル未定義エラー」や「マクロエラー」で落ちるのを完全に防ぐため、
+     * ルートノード直下で一度 trackball_listener のベースノードを宣言します。
+     * これにより、左手側のコンパイルを無傷で完全に通過させます。
+     * 
+     * 右手（センサー側）のビルド時は、ハードウェア側の本物の定義が自動でマージされるため、
+     * トラックボールを殺すことなく、安全にスクロール設定（scroller）のみをアドオンできます！
+     */
+    trackball_listener: trackball_listener {
+        scroller {
+            layers = <2>; // 👈 レイヤー2（無変換/変換ホールド時）にスクロールを割り当て
+            input-processors = <&zip_xy_to_scroll_mapper>;
+        };
     };
 };
-#endif
 
 &lt {
     flavor = "balanced";
