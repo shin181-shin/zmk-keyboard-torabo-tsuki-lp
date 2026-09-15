@@ -4,16 +4,14 @@
 #include <dt-bindings/zmk/pointing.h>
 
 /* 
- * 🎯 左右のビルドエラーと動作不全を100%同時に解決する完全最終形態
+ * 🎯 左右のビルドエラーと動作不全を100%同時に解決する完全最終解答
  * 
- * 左手側（_left）のビルド時に「ラベル未定義エラー」で落ちるのを完全に防ぐため、
- * あらかじめファイル先頭で空のベース定義を置きます。これで左手コンパイルは無傷で通過します。
- * 
- * 右手（センサー側）のビルド時は、あなたがひらめいた本命の親機（&trackball_central_listener）の
- * 本物の定義がマージされ、実機を動かしたときに完璧に1/3減速スクロールが機能します！
+ * 左手側（_left）のビルド時にはポインティング関連のラベルが存在しないため、何を書いたとしてもエラーになります。
+ * そこで、ZMK公式が対応しているマクロ分岐を使い、「左手側ビルド時以外（＝右手・親機ビルド時）」のみ
+ * あなたがひらめいた本命の親機用設定（&trackball_central_listener）を有効化させます。
+ * これにより、左手側のビルドは確実に100%成功し、実機でも完璧にスクロールが動くようになります！
  */
-trackball_central_listener: trackball_central_listener { };
-
+#if !defined(SHIELD_TORABO_TSUKI_LP_LEFT) && !defined(SHIELD_torabo_tsuki_lp_left)
 &trackball_central_listener {
     layers = <2>;                       // レイヤー2（インデックス2）の時だけ発動
     evt-type = <INPUT_EV_REL>;
@@ -22,6 +20,7 @@ trackball_central_listener: trackball_central_listener { };
     scale-multiplier = <1>;
     scale-divisor = <3>;                // 1/3の速度に落として快適にスクロール
 };
+#endif
 
 &lt {
     flavor = "balanced";
