@@ -4,6 +4,13 @@
 #include <dt-bindings/zmk/pointing.h>
 #include <input/processors.dtsi> // 👈 インプットプロセッサに必須のヘッダーを追加
 
+&trackball_listener {
+    scroller {
+        layers = <2>;
+        input-processors = <&zip_xy_to_scroll_mapper>;
+    };
+};
+
 &lt {
     flavor = "balanced";
     bindings = <&mo>, <&kp>;
@@ -91,29 +98,4 @@
             >;
         };
     };
-};
-
-  // 🏎️ 速度を1/3にするカスタムプロセッサの定義
-    zip_scroll_scaler: zip_scroll_scaler {
-        compatible = "zmk,input-processor-scaler";
-        #input-processor-cells = <2>;
-        type = <INPUT_EV_REL>;
-        codes = <INPUT_REL_HWHEEL>, <INPUT_REL_WHEEL>;
-        track-remainders;
-    };
-};
-
-// 🎯 エラー回避のため、明示的に新しい標準ラベル名（zip_xy_to_scroll_mapper）を再定義
-/ {
-    zip_xy_to_scroll_mapper: zip_xy_to_scroll_mapper {
-        compatible = "zmk,input-processor-to-scroll-mapper";
-        #input-processor-cells = <0>;
-        not-selectable;
-    };
-};
-
-// torabo-tsuki LP のトラックボールリスナーにバインド
-&trackball_listener {
-    input-processors = <&zip_scroll_scaler 1 3>, <&zip_xy_to_scroll_mapper>;
-    layer = <2>;
 };
