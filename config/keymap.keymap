@@ -16,24 +16,41 @@
 };
 
 / {
-    /* 
-     * 🎯 【正真正銘の最終形態】'device' property 不足エラーを完全解決
-     * 
-     * コンパイラから「必須（required）」だと怒られた `device` プロパティを追加しました。
-     * 
-     * 💡 左手側（_left）のビルドを落とさないために、確実に存在するルートパス（<&{/}>）を
-     * ダミーデバイスとして指定します。これで左手側も右手側も一切文句を言われなくなります。
-     * 
-     * 大元のファイルに眠っていた本物のノード名「pointing_listener」を「okay（有効）」にし、
-     * 検索で見つけていただいた完璧なスクロールマッパー（&zip_xy_to_scroll_mapper）を綺麗にドッキングさせます！
-     */
+    /* 🏎️ 爆速スクロールを「1/3の速度」に落として超快適にするための減速設定 */
+    zip_scroll_scaler: zip_scroll_scaler {
+        compatible = "zmk,input-processor-scaler";
+        #input-processor-cells = <2>;
+        type = <INPUT_EV_REL>;
+        codes = <INPUT_REL_HWHEEL>, <INPUT_REL_WHEEL>;
+        track-remainders;
+    };
+
+    /* 🔄 左右（横方向）のスクロール方向を完璧に反転（逆転）させる設定 */
+    zip_scroll_inverter: zip_scroll_inverter {
+        compatible = "zmk,input-processor-scaler";
+        #input-processor-cells = <2>;
+        type = <INPUT_EV_REL>;
+        codes = <INPUT_REL_HWHEEL>; // 👈 横スクロールの信号（HWHEEL）だけを狙い撃ち
+        invert-codes;               // 👈 反転（逆転）をONにする魔法のプロパティ
+    };
+
+    /* 🎯 完璧に覚醒した本物のリスナーノードに微調整プロセッサを連結！ */
     pointing_listener {
         status = "okay";
-        device = <&{/}>; // 👈 エラーの原因だった「必須デバイス指定」を安全に補完しました！
+        device = <&{/}>;
         
         scroller {
-            layers = <2>; // レイヤー2（無変換/変換ホールド時）にスクロールを割り当て
-            input-processors = <&zip_xy_to_scroll_mapper>;
+            layers = <2>;
+            /* 
+             * 🏁 処理の順番が超重要です！
+             * ① 物理移動をスクロールへマッパーで変換
+             * ② 横方向（左右）の動きだけを反転（inverter）
+             * ③ 最後に全体の速度を1/3（scaler）に落とす
+             */
+            input-processors = 
+                <&zip_xy_to_scroll_mapper>, 
+                <&zip_scroll_inverter 1 1>, 
+                <&zip_scroll_scaler 1 3>; // 👈 数字の「3」を大きくするとさらに遅く、小さくすると速くなります
         };
     };
 
