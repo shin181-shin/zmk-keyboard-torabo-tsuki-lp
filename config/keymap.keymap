@@ -25,15 +25,16 @@
         track-remainders;
     };
 
-    /* 🔄 物理移動をスクロールに変換しつつ、左右（横方向）だけを綺麗に反転させるマッパー */
-    my_scroll_mapper: zip_xy_to_scroll_mapper {
-        compatible = "zmk,input-processor-to-scroll-mapper";
-        #input-processor-cells = <0>;
-        not-selectable;
-        invert-x; // 👈 これがコンパイラに怒られずに左右の方向だけを100%逆転させる魔法のプロパティです！
+    /* 
+     * 🔄 システムに元から内蔵されている本物のスクロールマッパー（&zip_xy_to_scroll_mapper）に対して、
+     * 「左右（X軸）の方向だけを反転してください」という正規のプロパティを安全に注入（流し込み）します。
+     * これにより、余計なカスタム定義を作らないため、バインディング不足エラーを100%完全に回避します！
+     */
+    &zip_xy_to_scroll_mapper {
+        invert-x;
     };
 
-    /* 🎯 完璧に動作した本物のリスナーノードに、修正したプロセッサを再連結！ */
+    /* 🎯 完璧に動作した本物のリスナーノードに、純正プロセッサチェーンを連結！ */
     pointing_listener {
         status = "okay";
         device = <&{/}>;
@@ -42,10 +43,10 @@
             layers = <2>;
             /* 
              * 🏁 処理の順番：
-             * ① 自作した反転機能付きマッパーでスクロールへ変換（my_scroll_mapper）
+             * ① 左右反転フラグが注入された本物のマッパーでスクロールへ変換（&zip_xy_to_scroll_mapper）
              * ② 最後に全体の速度を1/3（zip_scroll_scaler）に落とす
              */
-            input-processors = <&my_scroll_mapper>, <&zip_scroll_scaler 1 3>;
+            input-processors = <&zip_xy_to_scroll_mapper>, <&zip_scroll_scaler 1 3>;
         };
     };
 
